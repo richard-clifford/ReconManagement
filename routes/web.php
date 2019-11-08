@@ -27,28 +27,5 @@ Auth::routes();
         Route::get('show/{id}', 'ProgramController@show')->name('programs.show');
         Route::get('list', 'ProgramController@list')->name('programs.list');
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # Just somewhere to save this
-    Route::get('/dbdesign', function(){
-        return '<a href="https://dbdiagram.io/d/5dc1ab63edf08a25543d8dd6">https://dbdiagram.io/d/5dc1ab63edf08a25543d8dd6</a>';
-    });
+    
 // });

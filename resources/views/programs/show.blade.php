@@ -20,7 +20,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($hosts as $host):
+                            @foreach($hosts as $host)
                                 <tr>
                                     <td><a href="{{ $host->hostname }}">{{ substr($host->hostname, 0, 64) }}</a></td>
                                     <td>{{ $host->ip }}</td>
@@ -30,7 +30,7 @@
                                         <button class="btn btn-success">Port Scan</button>
                                     </td>
                                 </tr>
-                            @endforeach;
+                            @endforeach
                         </tbody>
                     </table>
                     <table class="table">

@@ -21,8 +21,8 @@
                                 <th>Is Private?</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach($programs as $program):
+                    <tbody>
+                            @foreach($programs as $program)
                                 <tr>
                                     <td>{{ $program->id }}</td>
                                     <td><a href="{{ route('programs.show', $program->id) }}">{{ $program->bounty_name }}</a></td>
@@ -31,7 +31,7 @@
                                     <td>{{ $program->author_id }}</td>
                                     <td>{{ $program->is_private }}</td>
                                 </tr>
-                            @endforeach;
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

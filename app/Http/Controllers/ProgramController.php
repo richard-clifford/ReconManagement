@@ -83,11 +83,9 @@ class ProgramController extends Controller
     public function show($id)
     {
         // May need a limit with pagination
-        $hosts = Host::where('bounty_id', '=', $id)
-            ->get();
+        $hosts = Host::where('bounty_id', '=', $id)->get();
         
-        $resources = Resource::where('bounty_id', '=', $id) 
-            ->get();
+        $resources = Resource::where('bounty_id', '=', $id)->get();
         
         return view('programs.show', [
             'resources' => $resources, 
