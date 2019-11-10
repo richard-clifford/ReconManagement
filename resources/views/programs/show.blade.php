@@ -7,7 +7,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    {{ $title }}
+                    {{ $title->bounty_name }}
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -42,7 +42,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($resources as $res):
+                            @foreach($resources as $res)
                                 <tr>
                                     <td><a href="{{ $res->result }}">{{ substr($res->result, 0, 64) }}</a></td>
                                     {{-- This lookup needs to be done in the controller --}}
@@ -51,7 +51,7 @@
                                         <button class="btn btn-success">Run Recon</button>
                                     </td>
                                 </tr>
-                            @endforeach;
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

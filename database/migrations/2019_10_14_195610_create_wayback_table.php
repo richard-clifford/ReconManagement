@@ -15,7 +15,7 @@ class CreateWaybackTable extends Migration
     {
         Schema::create('wayback', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('result',2048);
+            $table->string('result', 2048);
             $table->softDeletes();
             $table->timestamps();
             $table->engine = 'InnoDB';

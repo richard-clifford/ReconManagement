@@ -20,12 +20,12 @@ Auth::routes();
     })->name('home');
 
     Route::prefix('/programs')->group(function() {
-        Route::get('/', 'ProgramController@index');
-        Route::get('new', 'ProgramController@create')->name('programs.new');
-        Route::post('new', 'ProgramController@store')->name('programs.new');
+        // Route::get('/', \App\Http\Controllers\Program\ProgramListController::class);
+        // Route::get('/new', \App\Http\Controllers\Program\ProgramCreateController::class);
+        // Route::post('new', 'ProgramController@store')->name('programs.new');
 
-        Route::get('show/{id}', 'ProgramController@show')->name('programs.show');
-        Route::get('list', 'ProgramController@list')->name('programs.list');
+        // Route::get('show/{id}', 'ProgramController@show')->name('programs.show');
+        // Route::get('list', 'ProgramController@list')->name('programs.list');
     });
     
 // });
