@@ -10,6 +10,13 @@
                     {{ $title->bounty_name }}
                 </div>
                 <div class="card-body">
+                <!-- Pull-right doesn't work here -->
+                    <div class="pull-right">
+                        <form action="{{ route('recon.start', $id) }}" method="post" class="pull-right">
+                            {{ csrf_field() }}
+                            <input type="submit" name="submit" value="Start Recon" class="btn btn-success">
+                        </form>
+                    </div>
                     <table class="table">
                         <thead class="table-dark">
                             <tr>

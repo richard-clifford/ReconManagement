@@ -26,8 +26,8 @@
                                 <tr>
                                     <td>{{ $program->id }}</td>
                                     <td><a href="{{ route('programs.show', $program->id) }}">{{ $program->bounty_name }}</a></td>
-                                    <td>{{ $program->in_scope }}</td>
-                                    <td>{{ $program->out_of_scope }}</td>
+                                    <td>{{ implode(", ", (array) json_decode($program->in_scope, true)) }}</td>
+                                    <td>{{ implode(", ", (array) json_decode($program->out_of_scope, true)) }}</td>
                                     <td>{{ $program->author_id }}</td>
                                     <td>{{ $program->is_private }}</td>
                                 </tr>

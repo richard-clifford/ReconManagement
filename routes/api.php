@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Command;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,14 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Route::middleware('auth:api')->get('/cron', function (Request $request) {
+Route::get('/cron/{id}', function (Request $request) {
+    try {
+        $cmd = new Command;
+        $cmd->executeRecon($request->id);
+    } catch(\Exception $e) {
+        dd($e->getMessage());
+    }
 });
