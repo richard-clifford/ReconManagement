@@ -8,6 +8,7 @@ use Artisan;
 
 class CommandController extends Controller
 {
+    protected $currentId = 0;
     public $reconMethods = [
         'subdomain',
         'javascript',
@@ -17,7 +18,6 @@ class CommandController extends Controller
     ];
 
     protected $scope = [
-
     ];
 
     protected function subdomainEnum($scope)
@@ -33,7 +33,11 @@ class CommandController extends Controller
                     $wildCards[$dom] = true;
                 }
             }
-            dd(Artisan::call('Recon:SubdomainEnum', ['domains' => json_encode($wildCards)]));
+            dd(Artisan::call('Recon:SubdomainEnum', [
+                'id' => $this->currentId,
+                'domains' => json_encode($wildCards)
+                ]
+            ));
         }
     }
 
@@ -69,7 +73,7 @@ class CommandController extends Controller
 
     public function executeRecon(Request $request)
     {
-        $id = $request->id;
+        $this->currentId = $id = $request->id;
         $methods = $request->methods;
 
         $target = Program::where('id', '=', $id)->get();

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Resource;
 
 class SubdomainEnum extends Command
 {
@@ -13,19 +14,12 @@ class SubdomainEnum extends Command
      *
      * @var string
      */
-    protected $signature = 'Recon:SubdomainEnum {domains*}';
+    protected $signature = 'Recon:SubdomainEnum {id} {domains*}';
 
     /**
      * The console command description.
      *
      * @var string
-     */
-    protected $description = 'Runs subdomain recon based on the bounty target';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -39,6 +33,9 @@ class SubdomainEnum extends Command
      */
     public function handle()
     {
+
+        $id = $this->argument('id');
+
         $domains = $this->argument('domains');
 
         $arrDomains = json_decode($domains, true);
@@ -56,13 +53,28 @@ class SubdomainEnum extends Command
         $parts = explode('/', $currentPath);
         array_pop($parts);
         $newPath = implode('/', $parts);
-
-        $outputFilename = escapeshellarg(sprintf('%s/%s.txt', $newPath, Str::random(32)));
+        $ofn = Str::random(32) . '.txt';
+        $outputFilename = escapeshellarg(sprintf('%s/%s', $newPath, $ofn));
 
         // Unset any timeout
         set_time_limit((3600*24));
 
         // Look for a better way of doing this:
-        return shell_exec(sprintf('/home/mantis/Tools/amass_v3.4.4_linux_amd64/amass enum -df %1$s -o %2$s', escapeshellarg($newPath.'/'.$filename), $outputFilename));
+        if(!is_null(shell_exec(sprintf('/home/mantis/Tools/amass_v3.4.4_linux_amd64/amass enum -passive -df %1$s -o %2$s', escapeshellarg($newPath.'/'.$filename), $outputFilename))))
+        {
+            $results = Storage::get($ofn);
+            foreach(explode("\n", $results) as $newDomainResource)
+            {
+                $resource = new Resource;
+                $resource->bounty_id = $id;
+                $resource->result = $newDomainResource;
+                $resource->src = 'subdomains';
+                $resource->save();
+            }
+        }
+
+
+        // Clear up the data
+        Storage::delete($outputFilename, $filename);
     }
 }
