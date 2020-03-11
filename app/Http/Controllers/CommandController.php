@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Program;
 use Illuminate\Http\Request;
+use Artisan;
 
 class CommandController extends Controller
 {
@@ -14,30 +16,72 @@ class CommandController extends Controller
         'GetAllUrls',
     ];
 
-    protected function subdomainEnum() 
-    {
-    }
-    
-    public function parseScope($inScope, $outOfScope)
-    {
-        if($inScope) 
-        {
+    protected $scope = [
 
+    ];
+
+    protected function subdomainEnum($scope)
+    {
+        if(is_array($scope) && array_key_exists('in', $scope))
+        {
+            $wildCards = [];
+            foreach($scope['in'] as $dom => $wild)
+            {
+
+                if($wild)
+                {
+                    $wildCards[$dom] = true;
+                }
+            }
+            dd(Artisan::call('Recon:SubdomainEnum', ['domains' => json_encode($wildCards)]));
         }
     }
 
-    public function executeRecon($id, array $methods) 
+    public function parseScope($inScope, $outOfScope)
     {
-        $target = Program::where('id', '=', $id)->first();
+        $inScopeArr = json_decode($inScope, true);
+        $ooScopeArr = json_decode($outOfScope, true);
+
+        if(is_array($inScopeArr))
+        {
+            foreach($inScopeArr as $is)
+            {
+                $this->scope['in'][$is] = false;
+                if(substr($is, 0, 1) === '*')
+                {
+                    $this->scope['in'][$is] = true;
+                }
+            }
+        }
+        if(is_array($ooScopeArr))
+        {
+            foreach($ooScopeArr as $oos)
+            {
+                $this->scope['out'][$oos] = false;
+                if(substr($oos, 0, 1) === '*')
+                {
+                    $this->scope['out'][$oos] = true;
+                }
+            }
+        }
+        return $this->scope;
+    }
+
+    public function executeRecon(Request $request)
+    {
+        $id = $request->id;
+        $methods = $request->methods;
+
+        $target = Program::where('id', '=', $id)->get();
         $reconMethods = [];
         if(!empty($methods) && $methods[0] !== '*')
         {
-            foreach($methods as $rc) 
+            foreach($methods as $rc)
             {
                 $reconMethods[] = $rc;
             }
-        } 
-        else 
+        }
+        else
         {
             foreach($this->reconMethods as $rc)
             {
@@ -45,21 +89,21 @@ class CommandController extends Controller
             }
         }
         $results = [];
-        foreach($reconMethods as $recMeth)  
+        foreach($reconMethods as $recMeth)
         {
             switch($recMeth)
             {
                 case 'subdomain':
                     foreach($target as $t)
                     {
-                        $scope = $this->parseScope($t);
-                        foreach($scope as $sc) 
+                        $scope = $this->parseScope($t['in_scope'], $t['out_of_scope']);
+                        foreach($scope as $sc)
                         {
-                            $results['subdomains'] = $this->subdomainEnum($sc);
+                            $results['subdomains'] = $this->subdomainEnum($scope);
                         }
                     }
-                
             }
         }
+        // dd($results);
     }
 }

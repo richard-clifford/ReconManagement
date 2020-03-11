@@ -28,14 +28,14 @@ Auth::routes();
         Route::get('/', 'ProgramController@index');
         Route::get('new', 'ProgramController@create')->name('programs.new');
         Route::post('new', 'ProgramController@store')->name('programs.new');
-        Route::get('{id}/edit', 'ProgramController@edit')->name('programs.edit');
-        Route::patch('{id}/update', 'ProgramController@update')->name('programs.update');
-        Route::get('{id}/show', 'ProgramController@show')->name('programs.show');
+        Route::get('{id}/edit', 'ProgramController@edit')->where(['id' => '[0-9]+'])->name('programs.edit');
+        Route::patch('{id}/update', 'ProgramController@update')->where(['id' => '[0-9]+'])->name('programs.update');
+        Route::get('{id}/show', 'ProgramController@show')->where(['id' => '[0-9]+'])->name('programs.show');
         Route::get('list', 'ProgramController@list')->name('programs.list');
     });
 
     Route::prefix('recon')->group(function(){
-        Route::post('{id}/start', 'CommandController@executeRecon')->name('recon.start');
+        Route::post('{id}/start', 'CommandController@executeRecon')->where(['id' => '[0-9]+'])->name('recon.start');
     });
 
     // # Just somewhere to save this

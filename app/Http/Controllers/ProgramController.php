@@ -39,16 +39,17 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
+
         $inScope = explode(",", $request->in_scope);
         $outOfScope = explode(",", $request->out_of_scope);
-        
+
         $program = new Program;
         $program->in_scope = json_encode($inScope);
         $program->out_of_scope = json_encode($outOfScope);
         $program->bounty_name = $request->program_name;
         $program->is_private = intval($request->is_private);
         $program->author_id = (!empty(Auth::id()) ? Auth::id() : 0);
-        if($program->save()) 
+        if($program->save())
         {
             // return redirect()->route('programs.view', $program->id);
             return redirect()->route('programs.list');
@@ -59,11 +60,11 @@ class ProgramController extends Controller
         return back()->withInput();
     }
 
-    public function list() 
+    public function list()
     {
 
         $programs = Program::all();
-    
+
         return view('programs.list', ['programs' => $programs]);
 
         // return view('programs.list', [
@@ -74,7 +75,7 @@ class ProgramController extends Controller
         //     'outOfScope' => $program->out_of_scope,
         //     'private' => $program->is_private,
         //     'author' => User::where('id', '=', $program->author_id)->find(['name'])->first(),
-        // ]); 
+        // ]);
     }
 
     /**
@@ -88,12 +89,12 @@ class ProgramController extends Controller
         // May need a limit with pagination
         $hosts = Host::where('bounty_id', '=', $id)
             ->get();
-        
-        $resources = Resource::where('bounty_id', '=', $id) 
+
+        $resources = Resource::where('bounty_id', '=', $id)
             ->get();
-        
+
         return view('programs.show', [
-            'resources' => $resources, 
+            'resources' => $resources,
             'hosts' => $hosts,
             'title' => Program::where('id', '=', $id)->get(['bounty_name'])->first(),
             'id' => $id,
